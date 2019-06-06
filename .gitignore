@@ -1,0 +1,14 @@
+
+*.o
+
+src/polgraph
+
+src/pomdpeval
+
+src/pomdpconvert
+
+src/pomdpsim
+
+src/testControllerTiger
+
+src/pomdpsol
