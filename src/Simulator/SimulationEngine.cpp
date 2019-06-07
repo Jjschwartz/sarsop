@@ -430,13 +430,15 @@ namespace momdp
           map<string, string> mostProbYState = problem->getFactoredUnobservedStatesSymbols(mostProbY);
           printTuple(mostProbYState, streamOut);
         }
+        // print each state and belief
+        printCurrentBeliefVec(*nextBelSt->bvec, *streamOut);
 
-          streamOut->width(4);*streamOut<<left<<"A"<<":";
-          map<string, string> actState = problem->getActionsSymbols(currAction);
-          printTuple(actState, streamOut);
+        streamOut->width(4);*streamOut<<left<<"A"<<":";
+        map<string, string> actState = problem->getActionsSymbols(currAction);
+        printTuple(actState, streamOut);
 
-          streamOut->width(4);*streamOut<<left<<"R"<<":";
-          *streamOut << currReward<<endl;
+        streamOut->width(4);*streamOut<<left<<"R"<<":";
+        *streamOut << currReward<<endl;
       }
 
       // now that we have the action, state of observed variable, and observation,

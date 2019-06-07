@@ -12,3 +12,5 @@ src/pomdpsim
 src/testControllerTiger
 
 src/pomdpsol
+
+src/libappl\.a
