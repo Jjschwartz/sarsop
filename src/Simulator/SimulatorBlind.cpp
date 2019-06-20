@@ -1,9 +1,9 @@
 /**
- * @file SimulationDriver.cc
+ * @file SimulatorBlind.cpp
  * @brief This is the simulation driver which will call the necessary functions and make
- * the correct calls as and when required
- * @author Amit Jain
- * @date 2007-04-10
+ * the correct calls as and when required. Extension of Simulator.cpp by Amit Jain.
+ * @author Jonathon Schwartz
+ * @date 2019-19-06
  */
 
 #include "SimulationEngine.h"
@@ -35,13 +35,18 @@ using namespace momdp;
 
 void print_usage(const char* cmdName)
 {
-	cout << "Usage: " << cmdName << " POMDPModelFileName --policy-file policyFileName --simLen numberSteps \n"
-<<"	--simNum numberSimulations [--fast] [--srand randomSeed] [--output-file outputFileName]\n"
+	cout << "Usage: " << cmdName << " POMDPModelFileName --policy-file policyFileName\n"
+<<"	--policy-model policyModelFileName --simLen numberSteps\n"
+<<"	--simNum numberSimulations [--fast] [--srand randomSeed]\n"
+<<"	[--output-file outputFileName]\n"
 <<"    or " << cmdName << " --help (or -h)  Print this help\n"
 <<"    or " << cmdName << " --version	  Print version information\n"
 <<"\n"
-<<"Simulator options:\n"
+<<"SimulatorBlind options:\n"
 <<"  --policy-file policyFileName	Use policyFileName as the policy file name (compulsory).\n"
+<<"  --policy-model policyModelFileName	\n"
+<<"				Use POMDPX/POMDP PolicyModelFileName as the belief\n"
+<<"				model for policy (compulsory).\n"
 <<"  --simLen numberSteps		Use numberSteps as the number of steps for each\n"
 <<"				simulation run (compulsory).\n"
 <<"  --simNum numberSimulations	Use numberSimulations as the number of simulation runs\n"
@@ -57,18 +62,7 @@ void print_usage(const char* cmdName)
 <<"  --output-file outputFileName	Use outputFileName as the name for the output file\n"
 <<"				that contains the simulation trace.\n"
 		<< "Example:\n"
-		<< "  " << cmdName << " --simLen 100 --simNum 100 --policy-file out.policy Hallway.pomdp\n";
-
-// 	cout << "usage: binary [options] problem:\n"
-// 		<< "--help, print this message\n"
-// 		<< "--policy-file, policy file to be used\n"
-// 		<< "--output-file, output file to be used\n"
-// 		<< "--simLen, length of simulation\n"
-// 		<< "--simNum, number of simulations\n"
-// 		<< "--srand, random seed (default: current time)\n"
-// 		<< "--lookahead, use \"one-step look ahead\" when selecting action (default: yes)\n"
-// 		<< "Examples:\n"
-// 		<< " ./simulate --simLen 100 --simNum 100 --policy-file out.policy Hallway.pomdp\n";
+		<< "  " << cmdName << " Hallway.pomdp --simLen 100 --simNum 100 --policy-file out.policy --policy-model Hallway.pomdp\n";
 
 }
 
@@ -129,7 +123,7 @@ int main(int argc, char **argv)
         }
 
         //check validity of options
-        if (p->policyFile == "" || p->simLen == -1 || p->simNum == -1)
+        if (p->policyFile == "" || p->simLen == -1 || p->simNum == -1 || p->policyModelFile == "")
         {
             print_usage(p->cmdName);
             return 0;
@@ -146,8 +140,11 @@ int main(int argc, char **argv)
             enableFiling = true;
         }
 
-				cout << "\nLoading the model ..." << endl << "  ";
+				cout << "\nLoading the simulator model ..." << endl << "  ";
         SharedPointer<MOMDP> problem = ParserSelector::loadProblem(p->problemName, *p);
+
+				cout << "\nLoading the policy model ..." << endl << "  ";
+				SharedPointer<MOMDP> policyModel = ParserSelector::loadProblem(p->policyModelFile, *p);
 
         if(p->stateMapFile.length() > 0 )
         {
@@ -190,9 +187,8 @@ int main(int argc, char **argv)
         rewardCollector.setup(*p);
 
         ofstream * foutStream = NULL;
-        srand(p->seed);//Seed for random number.  Xan
-        //cout << p->seed << endl;
-
+        srand(p->seed);
+        cout << "  random seed : " << p->seed << endl;
 
 
         if (enableFiling)
@@ -203,7 +199,7 @@ int main(int argc, char **argv)
         for (int currSim = 0; currSim < p->simNum; currSim++)
         {
             SimulationEngine engine;
-            engine.setup(problem, policy, p);
+            engine.setup(problem, policyModel, policy, p);
 
             double reward = 0, expReward = 0;
 

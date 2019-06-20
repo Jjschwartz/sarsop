@@ -1,7 +1,7 @@
-/** 
+/**
 * Part of the this code is derived from ZMDP: http://www.cs.cmu.edu/~trey/zmdp/
 * ZMDP is released under Apache License 2.0
-* The rest of the code is released under GPL v2 
+* The rest of the code is released under GPL v2
 */
 
 #ifndef INCsolverUtils_h
@@ -59,6 +59,8 @@ namespace momdp{
 		string problemBasenameWithPath;
 		string policyGraphFile;
 		string hardcodedProblem;
+
+		string policyModelFile;	// Used for SimulatorBlind
 
 		int graphDepth;
 		int graphMaxBranch;

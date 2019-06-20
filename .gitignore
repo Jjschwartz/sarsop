@@ -9,8 +9,18 @@ src/pomdpconvert
 
 src/pomdpsim
 
+src/pomdpsimblind
+
 src/testControllerTiger
 
 src/pomdpsol
+
+src/*.pomdpx
+
+src/*.policy
+
+src/*.out
+
+src/*.txt
 
 src/libappl\.a

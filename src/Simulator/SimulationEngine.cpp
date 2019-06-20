@@ -74,6 +74,15 @@ namespace momdp
   {
     this->policy = policy;
     this->problem = problem;
+    this->policyModel = problem;
+    this->solverParams = solverParams;
+  }
+
+  void SimulationEngine::setup(SharedPointer<MOMDP> problem, SharedPointer<MOMDP> policyModel, SharedPointer<AlphaVectorPolicy> policy, SolverParams * solverParams)
+  {
+    this->policy = policy;
+    this->problem = problem;
+    this->policyModel = policyModel;
     this->solverParams = solverParams;
   }
 
@@ -429,9 +438,10 @@ namespace momdp
           streamOut->width(4);*streamOut<<left<<"ML Y"<<":";
           map<string, string> mostProbYState = problem->getFactoredUnobservedStatesSymbols(mostProbY);
           printTuple(mostProbYState, streamOut);
+
+          // print each state and belief
+          printCurrentBeliefVec(*currBelSt->bvec, *streamOut);
         }
-        // print each state and belief
-        printCurrentBeliefVec(*nextBelSt->bvec, *streamOut);
 
         streamOut->width(4);*streamOut<<left<<"A"<<":";
         map<string, string> actState = problem->getActionsSymbols(currAction);
@@ -448,16 +458,16 @@ namespace momdp
         // check to see if the initial X is a distribution or a known state
         if (currBelSt->sval == -1) // special case for first time step where X is a distribution
         {
-          nextBelSt = problem->beliefTransition->nextBelief(currBelSt->bvec, currBelX, currAction, currObservation, actNewStateCompl->sval);
+          nextBelSt = policyModel->beliefTransition->nextBelief(currBelSt->bvec, currBelX, currAction, currObservation, actNewStateCompl->sval);
         }
         else
         {
-          nextBelSt = problem->beliefTransition->nextBelief(currBelSt, currAction, currObservation, actNewStateCompl->sval);
+          nextBelSt = policyModel->beliefTransition->nextBelief(currBelSt, currAction, currObservation, actNewStateCompl->sval);
         }
       }
       else
       {
-        nextBelSt = problem->beliefTransition->nextBelief(currBelSt, currAction, currObservation, actNewStateCompl->sval);
+        nextBelSt = policyModel->beliefTransition->nextBelief(currBelSt, currAction, currObservation, actNewStateCompl->sval);
       }
       //problem->getNextBeliefStval(nextBelSt, currBelSt, currAction, currObservation, actNewStateCompl->sval);
 

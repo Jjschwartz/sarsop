@@ -1,7 +1,7 @@
-/** 
+/**
 * Part of the this code is derived from ZMDP: http://www.cs.cmu.edu/~trey/zmdp/
 * ZMDP is released under Apache License 2.0
-* The rest of the code is released under GPL v2 
+* The rest of the code is released under GPL v2
 */
 
 #include <assert.h>
@@ -91,7 +91,7 @@ namespace momdp{
 		simNum = -1;
 		seed = time(0);
 		//stateMapFile = ""; // Commented out during code merge on 02102009
-		
+
 		memoryLimit = 0; // no memory limit
 		strategy = S_SARSOP;
 		//probName = NULL; // Commented out during code merge on 02102009
@@ -138,17 +138,17 @@ namespace momdp{
 
 	// ***** common options
 		{"help",			0,NULL,'h'}, // display help
-		{"version",			0,NULL,'V'}, // print version 
+		{"version",			0,NULL,'V'}, // print version
 		{"fast",			0,NULL,'f'}, // Use fast (but very picky) alternate parser for .pomdp files.
 		{"memory",			1,NULL,'m'}, // Use ARG as the memory limit in MB. No memory limit by default. [for ofsol and evaluate only]
 
 	// ***** ofsol only options
-		{"precision",			1,NULL,'p'}, // Set ARG as the target precision in solution quality. The target precision is 1e-3 by default. Note, this precision is also used in initialization 
+		{"precision",			1,NULL,'p'}, // Set ARG as the target precision in solution quality. The target precision is 1e-3 by default. Note, this precision is also used in initialization
 		{"randomization",		0,NULL,'c'}, // SampleBP randomization flag. Turn on randomization for the sampling algorithm. Randomization is off by default.
 		{"timeout",			1,NULL,'T'}, // Use ARG as the timeout in seconds.  There is no time limit by default.
 		{"output",			1,NULL,'o'}, //  Use ARG as the name of policy output file. The file name is "out.policy" by default.
 		{"policy-interval",		1, NULL, 'i'}, // Use ARG as the time interval between two consecutive write-out of policy files. If this is not specified, ofsol only writes out a policy file upon termination.
-		{"trial-improvement-factor",     1,NULL, 'j'}, // Use ARG as the trial improvement factor. The default is 0.5. So, for example, a trial terminates at a node when its upper and lower bound gap is less than 0.5 of the gap at the root.  
+		{"trial-improvement-factor",     1,NULL, 'j'}, // Use ARG as the trial improvement factor. The default is 0.5. So, for example, a trial terminates at a node when its upper and lower bound gap is less than 0.5 of the gap at the root.
 
 		// --------- internal use
 		{"unfactored-init",		0, NULL, 'M' }, // see documentation below
@@ -156,18 +156,18 @@ namespace momdp{
 		{"mdp",				0, NULL, 'W' }, // for generating MDP policy
 		{"qmdp",			0, NULL, 'X' }, // for generating QMDP policy
 		{"fib",				0, NULL, 'F' }, // for generating FIB policy
-		{"overPruneThreshold",		1,NULL, 'b'}, // Dynamic delta pruning parameter 
-		{"lowerPruneThreshold",		1,NULL, 'g'}, // Dynamic delta prunning prarm  
+		{"overPruneThreshold",		1,NULL, 'b'}, // Dynamic delta pruning parameter
+		{"lowerPruneThreshold",		1,NULL, 'g'}, // Dynamic delta prunning prarm
 		{"trials",			1,NULL, 'N'}, // target trials, not used
 		{"dump",			0,NULL, 'D'}, // flag to dump data, not used
-		//{"search",			1,NULL, 's'}, // algorithm selection, no longer used, since we only have SARSOP now 
+		//{"search",			1,NULL, 's'}, // algorithm selection, no longer used, since we only have SARSOP now
 		{"dumpPolicyTrace",		0,NULL, 'P'}, // dump policy at regular interval, not used
 
 	// ***** simulate, evaluate and policygraph options
 		{ "policy-file",		1, NULL, 'Q' }, // Use ARG as the policy file name (compulsory).
 
 		// --------- internal use
-		{ "lookahead",			1, NULL, 'L' }, // ARG == no means do not use one step look ahead for action selection. Default uses one step look ahead for action selection. 
+		{ "lookahead",			1, NULL, 'L' }, // ARG == no means do not use one step look ahead for action selection. Default uses one step look ahead for action selection.
 
 	// ***** simulate and evaluate options
 		{ "simLen",			1, NULL, 'S' }, // Use ARG as the number of steps for each simulation run (compulsory).
@@ -185,6 +185,9 @@ namespace momdp{
 		{ "graph-max-depth",		1, NULL, 'd' }, // Use ARG as the maximum horizon of the generated policy graph. There is no limit by default.
 		{ "graph-max-branch",		1, NULL, 'B' }, // ARG is the max policy graph outgoing edges per node. There is no limit by default.
 		{ "graph-min-prob",		1, NULL, 't' }, // Suppress policy graph with outgoing edges less than probability ARG. There is no minimum threshold by default.
+
+	// ***** simulate blind only options
+		{ "policy-model",			1, NULL, 'q' }, // Use ARG as the belief model fle name for policy in Simulator.
 
 		{NULL,0,0,0}
 
@@ -214,12 +217,12 @@ namespace momdp{
 
 		p.cmdName = argv[0];
 
-		while (1) 
+		while (1)
 		{
 			char optchar = getopt_long(argc,argv,shortOptions,longOptions,NULL);
 			if (optchar == -1) break;
 
-			switch (optchar) 
+			switch (optchar)
 			{
 			case 'A':
 				{
@@ -364,6 +367,9 @@ namespace momdp{
 			case 'R':
 				p.seed = atoi(optarg) >= 0 ? atoi(optarg) : time(0);
 				break;
+			case 'q':
+				p.policyModelFile = string(optarg);
+				break;
 
 			case '?': // unknown option
 			case ':': // option with missing parameter
@@ -372,11 +378,11 @@ namespace momdp{
 				return false;
 				break;
 			default:
-				cerr << "unknowm paramter specified" << endl << endl;
+				cerr << "unknown parameter specified" << endl << endl;
 				return false;
 			}
 		}
-		if (argc-optind != 1) 
+		if (argc-optind != 1)
 		{
 			if(p.hardcodedProblem.length() > 0 )
 			{
@@ -395,7 +401,7 @@ namespace momdp{
 		if( p.hardcodedProblem.length() ==0 )
 		{
 			p.problemName = string(argv[optind++]);
-		
+
 			// check pomdp file name
 			std::string probNameStr = p.problemName;
 			std::string suffixStr(".pomdp");
@@ -404,11 +410,11 @@ namespace momdp{
 
 			bool test1 = endsWith(probNameStr, suffixStr);
 			test1 |= endsWith(probNameStr, suffixStr2);
-			if (test1) 
+			if (test1)
 			{
 				// filename looks ok
-			} 
-			else 
+			}
+			else
 			{
 				cerr << "ERROR: only POMDP or POMDPX file format with suffix .pomdp or .pomdpx are supported. The specified file: "<< p.problemName << " is not supported." << endl<< endl;
 				return false;
@@ -427,4 +433,3 @@ namespace momdp{
 		return true;
 	}
 }; // namespace momdp
-

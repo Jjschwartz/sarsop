@@ -97,13 +97,13 @@ PRINT	      = lpr
 # Files
 # ----------------------------------------------------------------------
 
-TARGETS	      = $(TARGET_APPL) $(TARGET_OFSOL) $(TARGET_SIM) $(TARGET_EVA) $(TARGET_GRAPH) $(TARGET_CONVERT) $(TARGET_CTRL)
+TARGETS	      = $(TARGET_APPL) $(TARGET_OFSOL) $(TARGET_SIM) $(TARGET_SIMB) $(TARGET_EVA) $(TARGET_GRAPH) $(TARGET_CONVERT) $(TARGET_CTRL)
 
-HDRS	      = $(HDRS_APPL) $(HDRS_OFSOL) $(HDRS_SIM) $(HDRS_EVA) $(HDRS_GRAPH) $(HDRS_CONVERT) $(HDRS_CTRL)
+HDRS	      = $(HDRS_APPL) $(HDRS_OFSOL) $(HDRS_SIM) $(HDRS_SIMB) $(HDRS_EVA) $(HDRS_GRAPH) $(HDRS_CONVERT) $(HDRS_CTRL)
 
-SRCS	      = $(SRCS_APPL) $(SRCS_OFSOL) $(SRCS_SIM) $(SRCS_EVA) $(SRCS_GRAPH) $(SRCS_CONVERT) $(HDRS_CTRL)
+SRCS	      = $(SRCS_APPL) $(SRCS_OFSOL) $(SRCS_SIM) $(SRCS_SIMB) $(SRCS_EVA) $(SRCS_GRAPH) $(SRCS_CONVERT) $(HDRS_CTRL)
 
-OBJS	      = $(OBJS_APPL) $(OBJS_OFSOL) $(OBJS_SIM) $(OBJS_EVA) $(OBJS_GRAPH) $(OBJS_CONVERT) $(OBJS_CTRL)
+OBJS	      = $(OBJS_APPL) $(OBJS_OFSOL) $(OBJS_SIM) $(OBJS_SIMB) $(OBJS_EVA) $(OBJS_GRAPH) $(OBJS_CONVERT) $(OBJS_CTRL)
 
 #
 # source file directories
@@ -133,6 +133,18 @@ SRCS_SIM	      = ./Simulator/Simulator.cpp
 
 
 OBJS_SIM	      = $(SRCS_SIM:.cpp=.o) # C++ object targets
+
+#
+# target: simulateblind
+#
+TARGET_SIMB	      = pomdpsimblind
+
+HDRS_SIMB	      =
+
+SRCS_SIMB	      = ./Simulator/SimulatorBlind.cpp
+
+
+OBJS_SIMB	      = $(SRCS_SIMB:.cpp=.o) # C++ object targets
 
 
 #
@@ -404,6 +416,9 @@ $(TARGET_OFSOL): $(OBJS_OFSOL) $(TARGET_APPL)
 
 $(TARGET_SIM):	$(OBJS_SIM) $(TARGET_APPL)
 		$(LINKER) $(LDFLAGS) $(OBJS_SIM) $(LIBS)  -o $(TARGET_SIM)
+
+$(TARGET_SIMB):	$(OBJS_SIMB) $(TARGET_APPL)
+		$(LINKER) $(LDFLAGS) $(OBJS_SIMB) $(LIBS)  -o $(TARGET_SIMB)
 
 $(TARGET_EVA):	$(OBJS_EVA) $(TARGET_APPL)
 		$(LINKER) $(LDFLAGS) $(OBJS_EVA) $(LIBS)  -o $(TARGET_EVA)

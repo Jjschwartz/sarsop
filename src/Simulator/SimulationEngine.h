@@ -16,12 +16,14 @@ namespace momdp
   {
     private:
       SharedPointer<MOMDP> problem;
+      SharedPointer<MOMDP> policyModel;
       SharedPointer<AlphaVectorPolicy> policy;
       SolverParams * solverParams;
 
     public:
       SimulationEngine();
       void setup(SharedPointer<MOMDP> problem, SharedPointer<AlphaVectorPolicy> policy, SolverParams * solverParams);
+      void setup(SharedPointer<MOMDP> problem, SharedPointer<MOMDP> policyModel, SharedPointer<AlphaVectorPolicy> policy, SolverParams * solverParams);
       void performActionObs(belief_vector& outBelObs, int action, const BeliefWithState& belSt) const;
       void performActionUnobs(belief_vector& outBelUnobs, int action, const BeliefWithState& belSt, int currObsState) const;
       void getPossibleObservations(belief_vector& possObs, int action, const BeliefWithState& belSt) const;
