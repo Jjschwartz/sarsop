@@ -173,8 +173,8 @@ namespace momdp {
             SharedPointer<SparseTable>  finalBeliefTable;
             SharedPointer<SparseTable>  mergeTables(vector<Function>* functionList, int whichFunction, ofstream& debugfile, bool printDebugFile);
 
-	    SharedPointer<SparseTable>  mergeSparseTables(vector<SharedPointer<SparseTable> > stList, int whichFunction, ofstream& debugfile, bool printDebugFile); 
-            void preprocessBeliefTables(ofstream& debugfile, bool printDebugFile);    
+	    SharedPointer<SparseTable>  mergeSparseTables(vector<SharedPointer<SparseTable> > stList, int whichFunction, ofstream& debugfile, bool printDebugFile);
+            void preprocessBeliefTables(ofstream& debugfile, bool printDebugFile);
 	    bool preprocessBeliefTablesDone;
             void mergeBeliefTables(ofstream& debugfile, bool printDebugFile);
 

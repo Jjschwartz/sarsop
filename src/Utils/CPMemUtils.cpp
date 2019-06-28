@@ -24,7 +24,7 @@ unsigned long getPhysicalMemorySize()
 	*/
 
 	return 1024 * 1024 * 1024;
- 
+
 #else
 
 #ifdef _MSC_VER
@@ -45,7 +45,7 @@ unsigned long getPhysicalMemorySize()
 	//return ((unsigned long)s_info.totalram) * ((unsigned long)s_info.mem_unit);
 	unsigned long int pageSize = sysconf (_SC_PAGESIZE);
 	unsigned long int pageNum = sysconf (_SC_PHYS_PAGES);
-	
+
 	// HACK: Cygwin running under PAE-enabled windows report page size of 65536
 #ifdef __CYGWIN__
 	pageSize = 4096;
@@ -102,15 +102,21 @@ unsigned long getCurrentProcessMemoryUsage()
 		CloseHandle(hProcess);
 	}
 	else
+		// std::cout << "Could not open process (Error " << ::GetLastError() << ")" << std::endl;
 		return 0;
-		//std::cout << "Could not open process (Error " << ::GetLastError() << ")" << std::endl;
 #else
-	struct mallinfo info;
-
-	/* what is the largest ECB heap buffer currently available? */
-	info = mallinfo();
-
-	return info.arena;
+	// struct mallinfo info;
+	//
+	// /* what is the largest ECB heap buffer currently available? */
+	// info = mallinfo();
+	//
+	// return info.arena;
+	// From:
+	// stackoverflow.com/questions/63166/how-to-determine-cpu-and-memory-consumption-from-inside-a-process
+	struct sysinfo memInfo;
+	sysinfo (&memInfo);
+	long long virtualMemUsed = memInfo.totalram - memInfo.freeram;
+	return virtualMemUsed;
 
 #endif
 #endif
@@ -139,8 +145,3 @@ unsigned long getPlatformMemoryLimit()
 	}
 	return memLimit;
 }
-
-
-
-
-

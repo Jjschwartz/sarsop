@@ -1,5 +1,5 @@
-/** 
-* The code is released under GPL v2 
+/**
+* The code is released under GPL v2
 */
 
 #include <sstream>
@@ -35,7 +35,7 @@ namespace momdp
 	{
 	}
 
-	GlobalResource::GlobalResource() 
+	GlobalResource::GlobalResource()
 	{
 		problem = NULL;
 		noPolicyOutput = false;
@@ -167,9 +167,9 @@ namespace momdp
 
 		// print stats
 		/*
-		printf("Time for backup %.2f s, #alpha %d, #backups %d, V(b0) %.5f\n", 	
-		gesTrialTime, 
-		pbSolver->bounds->alphaPlanePool->planes.size() , 
+		printf("Time for backup %.2f s, #alpha %d, #backups %d, V(b0) %.5f\n",
+		gesTrialTime,
+		pbSolver->bounds->alphaPlanePool->planes.size() ,
 		getTimeStamp(),
 		pbSolver->bounds->beliefCache->getRow( 0)->LB );
 
@@ -178,7 +178,7 @@ namespace momdp
 		//printf("Time for backup %.2f s, #alpha %d, #backups %d, V(b0) %.5f\n", 	solvingTimer.elapsed(), pbSolver->bounds->alphaPlanePool->planes.size() , getTimeStamp(),	pbSolver->beliefCache->getRow( 0)->LB );
 		//printf("Time elapsed %.2f s, #alpha %d, #backups %d, V(b0) %.5f\n",
 		//	solvingTimer.elapsed(),
-		//	pbSolver->bounds->alphaPlanePool->planes.size() , 
+		//	pbSolver->bounds->alphaPlanePool->planes.size() ,
 		//	getTimeStamp(),
 		//	pbSolver->beliefCache->getRow( 0)->LB );
 		printf("TODO HERE....\n");
@@ -260,6 +260,8 @@ namespace momdp
 				checkMemoryInterval = 0;
 				if(getCurrentProcessMemoryUsage() > solverParams.memoryLimit)
 				{
+					cout << "Memory limit (bytes): " << solverParams.memoryLimit << endl;
+					cout << "Memory usage (bytes): " << getCurrentProcessMemoryUsage() << endl;
 					bad_alloc ba;
 					throw ba;
 					//throw new bad_alloc();
@@ -345,12 +347,11 @@ namespace momdp
 		//
 		////cout << globalExpRew << " " << globalExpRew - confInterval << " " << globalExpRew + confInterval << endl;		//- TEMP FORMAT FOR EXPTS
 		//stringStream << "simNum = " << simNum<< " simLen = " << simLen;
-		//stringStream << " Global Reward = "<< globalRew << ", Global Exp Reward = " << globalExpRew << ", Global Exp Reward Stddev = " << totalVar<< ", 95Conf Interval = " << confInterval  << ", 95Conf Min = " << globalExpRew - confInterval << ", 95Conf Max = " << globalExpRew 
+		//stringStream << " Global Reward = "<< globalRew << ", Global Exp Reward = " << globalExpRew << ", Global Exp Reward Stddev = " << totalVar<< ", 95Conf Interval = " << confInterval  << ", 95Conf Min = " << globalExpRew - confInterval << ", 95Conf Max = " << globalExpRew
 		//	+ confInterval << endl;
 		//this->logEntry(stringStream.str());
 	}
 
 
-	
-}
 
+}

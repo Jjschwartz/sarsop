@@ -19,6 +19,8 @@
 		//#include <sys/resource.h>
 		//#include <sys/sysinfo.h>
 		#include <sys/unistd.h>
+		#include <sys/types.h>
+		#include <sys/sysinfo.h>
 
 		#include <stdlib.h>
 		#include <stdio.h>
